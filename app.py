@@ -13,7 +13,7 @@ try:
     st.success("Connected To Database Server Successfully.")
 
 except Exception as e:
-    st.error("Failed To Connect TO Database.")
+    st.error(f"Database connection failed: {e}")
     
 
 
