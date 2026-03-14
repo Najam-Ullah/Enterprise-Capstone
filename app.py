@@ -8,13 +8,28 @@ st.set_page_config(page_title="Enterprise Dashbord", layout="wide")
 st.title("📊 Full Stack Enterprise System.")
 
 st.subheader("Live Database Connected ....")
+st.subheader("1. Live Database Connection")
 try:
-    engine = create_engine('postgresql://neondb_owner:npg_m5pOVXFf4xqo@ep-cold-shadow-adq97ix0-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require')
-    st.success("Connected To Database Server Successfully.")
+    # Your connection engine
+    engine = create_engine("sqlite:///local_fallback.db") 
+    st.success("✅ Connected to Database Engine")
+    
+    # ---> NEW CODE START <---
+    # We ask Pandas to run the SQL query and fetch the table
+    try:
+        df = pd.read_sql("SELECT * FROM Inventory", engine)
+        
+        # We ask Streamlit to draw the table beautifully on the web
+        st.write("📦 **Live Pharmacy Inventory:**")
+        st.dataframe(df, use_container_width=True)
+        
+    except Exception as table_error:
+        # If the database is completely brand new and has no tables yet
+        st.info("Database connected, but the 'Inventory' table is empty or missing. You need to run an INSERT script to add medicines!")
+    # ---> NEW CODE END <---
 
 except Exception as e:
     st.error(f"Database connection failed: {e}")
-    
 
 
 st.divider()
